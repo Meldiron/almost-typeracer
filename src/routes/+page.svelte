@@ -15,7 +15,22 @@
 </script>
 
 <section class="my-6 bg-white rounded-lg shadow-sm p-4">
-	<div class="w-full grid grid-cols-7 gap-4">
+	<div class="flex items-center justify-between space-x-3 pb-8 pt-4">
+		<button class="text-gray-600 hover:text-gray-900">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+			  </svg>
+		</button>
+		  
+		<h3 class="text-gray-900 font-bold text-xl">November 2022</h3>
+		<button class="text-gray-600 hover:text-gray-900">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+			  </svg>
+		</button>
+		  
+	</div>
+	<div class="w-full grid grid-cols-1 md:grid-cols-7 gap-4">
 		<div class="col-span-1 text-center font-bold text-gray-300">M</div>
 		<div class="col-span-1 text-center font-bold text-gray-300">T</div>
 		<div class="col-span-1 text-center font-bold text-gray-300">W</div>
@@ -25,11 +40,12 @@
 		<div class="col-span-1 text-center font-bold text-gray-300">S</div>
 
 		{#each days as day}
-			<div class="col-span-1 flex items-center justify-center max-h-[100px]">
+			<div class="col-span-1 flex items-center justify-center">
 				{#if day !== null}
 					<svg
 						width="224"
 						height="224"
+						class="h-[auto]"
 						viewBox="0 0 224 224"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
