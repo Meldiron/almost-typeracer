@@ -21,7 +21,7 @@ function isPastDate(date) {
 
 function isRecentDate(date) {
 	const dateNow = new Date();
-	dateNow.setDate(dateNow.getDate() - 3);
+	dateNow.setDate(dateNow.getDate() - 7);
 	return date >= dateNow;
 }
 
