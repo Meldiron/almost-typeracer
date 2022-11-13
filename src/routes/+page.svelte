@@ -21,13 +21,13 @@
 	}
 
 	function onPlayGame(dayId: string | null, isPlayable: boolean) {
-		if(dayId === null && isPlayable) {
-			alert("Only VIP players can play this daily map.");
+		if (dayId === null && isPlayable) {
+			alert('Only VIP players can play this daily map.');
 			return;
 		}
 
-		if(dayId === null) {
-			alert("You cannot play daily map in future.");
+		if (dayId === null) {
+			alert('You cannot play daily map in future.');
 			return;
 		}
 
@@ -138,7 +138,7 @@
 				.map((backendDay) => {
 					if (typeof backendDay === 'number') {
 						const dayDate = new Date(month.getFullYear(), month.getMonth(), backendDay + 1);
-						
+
 						return { isPlayable: dayDate < new Date() && dayDate >= launchDate, dayId: null, dayNumber: backendDay + 1, isFinished: false, isNoMistake: false, isFastFinish: false };
 					}
 
@@ -148,16 +148,30 @@
 
 					return { isPlayable: dayDate < new Date() && dayDate >= launchDate, dayId: backendDay.$id, dayNumber: new Date(backendDay.date).getDate(), isFinished: dayProfile?.medalFinish ?? false, isNoMistake: dayProfile?.medalNoMistake ?? false, isFastFinish: dayProfile?.medalFastFinish ?? false };
 				}) as day}
-				<button on:click={() => onPlayGame(day.dayId, day.isPlayable)} class="col-span-1 flex items-center justify-center relative">
+				<button
+					on:click={() => onPlayGame(day.dayId, day.isPlayable)}
+					class="col-span-1 flex items-center justify-center relative"
+				>
 					{#if day.dayId === null && day.isPlayable}
 						<div class="absolute top-1.5 left-0 w-full flex justify-center">
-							<div class="transform translate-y-[-50%] bg-emerald-200 bg-opacity-100 rounded-full flex items-center justify-center p-1.5">
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 text-emerald-700">
-									<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-								  </svg>
+							<div
+								class="transform translate-y-[-50%] bg-emerald-200 bg-opacity-100 rounded-full flex items-center justify-center p-1.5"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="3"
+									stroke="currentColor"
+									class="w-4 h-4 text-emerald-700"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+									/>
+								</svg>
 							</div>
-							
-							  
 						</div>
 					{/if}
 					<svg
