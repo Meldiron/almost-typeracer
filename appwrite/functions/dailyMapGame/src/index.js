@@ -34,7 +34,7 @@ module.exports = async function (req, res) {
 	const client = new sdk.Client();
 
 	if (!req.variables['APPWRITE_FUNCTION_ENDPOINT'] || !req.variables['APPWRITE_FUNCTION_API_KEY']) {
-		throw Exception('Variables not set up properly.');
+		throw Error('Variables not set up properly.');
 	}
 
 	client

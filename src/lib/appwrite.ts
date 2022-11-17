@@ -29,8 +29,7 @@ const functions = new Functions(client);
 export const AppwriteService = {
 	signIn: () => {
 		const redirectUrl = window.location.href;
-		// account.createOAuth2Session('github', redirectUrl, redirectUrl);
-		account.createAnonymousSession();
+		account.createOAuth2Session('github', redirectUrl, redirectUrl);
 	},
 	signOut: async () => {
 		await account.deleteSession('current');
@@ -81,6 +80,25 @@ export const AppwriteService = {
 			mistakes,
 			mapId
 		}), false);
+
+		if (res.status !== 'completed') {
+			throw Error('Function failed with no response.');
+		}
+
+		const json = JSON.parse(res.response);
+
+		if (!json.success) {
+			throw Error(json.message);
+		}
+
+		return json;
+	},
+	claimVip: async () => {
+		await account.updateSession('current');
+		const session = await account.getSession('current');
+		console.log(session.providerAccessToken);
+		
+		const res = await functions.createExecution('claimVip', JSON.stringify({token: session.providerAccessToken}), false);
 
 		if (res.status !== 'completed') {
 			throw Error('Function failed with no response.');

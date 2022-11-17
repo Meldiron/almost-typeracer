@@ -68,7 +68,15 @@
 			blue: Math.random() > 0.8
 		});
 	}
+
+	function onClaimVip() {
+		AppwriteService.claimVip();
+	}
 </script>
+
+<div>
+	<button on:click={onClaimVip}>Claim VIP</button>
+</div>
 
 <section class="my-6 bg-white rounded-lg shadow-sm p-4">
 	<div class="flex items-center justify-between space-x-3 pb-8 pt-4">
