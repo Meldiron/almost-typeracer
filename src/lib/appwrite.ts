@@ -1,4 +1,4 @@
-import { Client, Account, ID, Databases, Query, type Models } from 'appwrite';
+import { Client, Account, ID, Databases, Query, type Models, Functions } from 'appwrite';
 import { AuthStore } from '$lib/authStore';
 import { get } from 'svelte/store';
 
@@ -24,11 +24,13 @@ const client = new Client()
 
 const account = new Account(client);
 const database = new Databases(client);
+const functions = new Functions(client);
 
 export const AppwriteService = {
 	signIn: () => {
 		const redirectUrl = window.location.href;
-		account.createOAuth2Session('github', redirectUrl, redirectUrl);
+		// account.createOAuth2Session('github', redirectUrl, redirectUrl);
+		account.createAnonymousSession();
 	},
 	signOut: async () => {
 		await account.deleteSession('current');
@@ -53,6 +55,9 @@ export const AppwriteService = {
 			Query.lessThanEqual('date', lastDayDate.toISOString())
 		]);
 	},
+	getDailyMap: async (gameId: string) => {
+		return await database.getDocument<DailyMap>('main', 'dailyMaps', gameId);
+	},
 	getDailyMapProfiles: async (mapIds: string[]) => {
 		const user = get(AuthStore);
 
@@ -69,5 +74,24 @@ export const AppwriteService = {
 		}
 
 		return await database.listDocuments<DailyMapProfile>('main', 'dailyMapsProfiles', queries);
+	},
+	submitGame: async (mapId: string, wpm: number, mistakes: number) => {
+		const res = await functions.createExecution('dailyMapGame', JSON.stringify({
+			wpm,
+			mistakes,
+			mapId
+		}), false);
+
+		if (res.status !== 'completed') {
+			throw Error('Function failed with no response.');
+		}
+
+		const json = JSON.parse(res.response);
+
+		if (!json.success) {
+			throw Error(json.message);
+		}
+
+		return json;
 	}
 };

@@ -13,7 +13,7 @@ const sdk = require('node-appwrite');
   If an error is thrown, a response with code 500 will be returned.
 */
 
-async function getMapAsUser(jwt, mapId) {
+async function getMapAsUser(req, jwt, mapId) {
 	const client = new sdk.Client();
 
 	client
@@ -53,7 +53,7 @@ module.exports = async function (req, res) {
 	const userJwt = req.variables['APPWRITE_FUNCTION_JWT'];
 	const userId = req.variables['APPWRITE_FUNCTION_USER_ID'];
 
-	const mapDocument = await getMapAsUser(userJwt, mapId);
+	const mapDocument = await getMapAsUser(req, userJwt, mapId);
 
 	if (mapDocument === null) {
 		res.json({ success: false, message: 'You are not allowed to play this day.' });
@@ -74,7 +74,7 @@ module.exports = async function (req, res) {
 		score: wpm,
 		medalFinish: true,
 		medalNoMistake: mistakes === 0,
-		medalFastFinish: wpm >= 30
+		medalFastFinish: wpm >= 60
 	};
 
 	if (profileDocument) {
@@ -85,10 +85,11 @@ module.exports = async function (req, res) {
 
 		await database.updateDocument('main', 'dailyMapsProfiles', profileDocument.$id, document);
 	} else {
-		await database.updateDocument('main', 'dailyMapsProfiles', sdk.ID.unique(), document);
+		await database.createDocument('main', 'dailyMapsProfiles', sdk.ID.unique(), document);
 	}
 
 	res.json({
-		success: true
+		success: true,
+		message: "Game successfully saved."
 	});
 };
