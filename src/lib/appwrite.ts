@@ -16,6 +16,8 @@ type DailyMapProfile = {
 type DailyMap = {
 	date: string;
 	text: string;
+	textBefore: string;
+	textAfter: string;
 } & Models.Document;
 
 const client = new Client()

@@ -5,7 +5,7 @@
         {
             "$id": "dailyMaps",
             "$createdAt": "2022-11-12T21:17:51.280+00:00",
-            "$updatedAt": "2022-11-12T21:20:42.564+00:00",
+            "$updatedAt": "2022-11-13T14:39:18.018+00:00",
             "$permissions": [],
             "databaseId": "main",
             "name": "Daily Maps",
@@ -28,6 +28,24 @@
                     "required": true,
                     "array": false,
                     "format": "",
+                    "default": null
+                },
+                {
+                    "key": "textBefore",
+                    "type": "string",
+                    "status": "available",
+                    "required": true,
+                    "array": false,
+                    "size": 100000,
+                    "default": null
+                },
+                {
+                    "key": "textAfter",
+                    "type": "string",
+                    "status": "available",
+                    "required": true,
+                    "array": false,
+                    "size": 100000,
                     "default": null
                 }
             ],
@@ -67,16 +85,6 @@
                     "default": null
                 },
                 {
-                    "key": "score",
-                    "type": "double",
-                    "status": "available",
-                    "required": true,
-                    "array": false,
-                    "min": -1.7976931348623157e+308,
-                    "max": 1.7976931348623157e+308,
-                    "default": null
-                },
-                {
                     "key": "medalFinish",
                     "type": "boolean",
                     "status": "available",
@@ -93,12 +101,14 @@
                     "default": false
                 },
                 {
-                    "key": "medalFastFinish",
-                    "type": "boolean",
+                    "key": "score",
+                    "type": "double",
                     "status": "available",
-                    "required": false,
+                    "required": true,
                     "array": false,
-                    "default": false
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
                 },
                 {
                     "key": "userId",
@@ -108,20 +118,17 @@
                     "array": false,
                     "size": 255,
                     "default": null
+                },
+                {
+                    "key": "medalFastFinish",
+                    "type": "boolean",
+                    "status": "available",
+                    "required": false,
+                    "array": false,
+                    "default": false
                 }
             ],
             "indexes": [
-                {
-                    "key": "userId",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "userId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                },
                 {
                     "key": "userIdMapId",
                     "type": "key",
@@ -132,6 +139,17 @@
                     ],
                     "orders": [
                         "ASC",
+                        "ASC"
+                    ]
+                },
+                {
+                    "key": "userId",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "userId"
+                    ],
+                    "orders": [
                         "ASC"
                     ]
                 }

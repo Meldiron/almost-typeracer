@@ -22,12 +22,21 @@
 	let text = ``;
 	$: letters = text.split('');
 
+	let oldInput : string | null = null;
 	let input: string | null = null;
 
 	let inputPass = 0;
 	let inputFail = 0;
 
 	$: if (input !== null) {
+		let isSpace = false;
+		const change = (input ?? '').split(oldInput ?? '').join('');
+		if(change === ' ') {
+			isSpace = true;
+		}
+
+		oldInput = input;
+
 		if (timerStart === null) {
 			timerStart = Date.now();
 		}
@@ -51,6 +60,14 @@
 			}
 
 			index++;
+		}
+
+		if(isSpace) {
+			while(letters[index] === ' ') {
+				inputPass++;
+				index++;
+				input += " ";
+			}
 		}
 
 		if (oldinputFail < inputFail) {
@@ -99,6 +116,13 @@
 		const wpm = (wordCount / difSecs) * 60;
 		return Math.round(wpm);
 	}
+
+	function parseHtml(text: string) {
+		return text
+			.split('\n').join('<span{{ATR_SPACE}}class="px-0.5">×</span><br>')
+			.split(' ').join('<span{{ATR_SPACE}}class="px-0.5">•</span>')
+			.split('{{ATR_SPACE}}').join(" ");
+	}
 </script>
 
 <section class="my-6 bg-white rounded-lg shadow-sm p-4">
@@ -129,8 +153,12 @@
 			</h3>
 		</div>
 		<div class="w-full">
-			<div class="p-6 rounded-xl bg-[#1e1e1e] text-[#669bd1]">
-				{#key inputPass}
+			<div class="text-sm rounded-xl bg-[#1e1e1e] text-[#669bd1] overflow-x-auto">
+				<div class="text-sm bg-black text-gray-700 rounded-t-xl px-6 pt-4 pb-2">
+					{@html parseHtml(day.textBefore)}
+				</div>
+				<div class="px-6 my-2">
+					{#key inputPass}
 					{#key inputFail}
 						{#each letters as letter, index}
 							{#if letter == '\n'}
@@ -143,6 +171,10 @@
 						{/each}
 					{/key}
 				{/key}
+				</div>
+				<div class="text-sm bg-black text-gray-600 rounded-b-xl px-6 pt-2 pb-4">
+					{@html parseHtml(day.textAfter)}
+				</div>
 			</div>
 		</div>
 		<div class="w-full mt-4">

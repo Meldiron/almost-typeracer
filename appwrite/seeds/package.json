@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.3",
-    "node-appwrite": "^8.1.0"
+    "node-appwrite": "^8.1.0",
+    "shelljs": "^0.8.5",
+    "strip-comments": "^2.0.1"
   }
 }

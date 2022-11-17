@@ -12,7 +12,7 @@
 	});
 </script>
 
-<div class="mx-auto max-w-2xl">
+<div class="mx-auto max-w-4xl">
 	{#if loading}
 		<section class="mt-12 flex items-center justify-center">
 			<svg
