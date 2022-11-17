@@ -22,12 +22,18 @@
 
 	function onPlayGame(dayId: string | null, isPlayable: boolean) {
 		if (dayId === null && isPlayable) {
-			alert('Only VIP players can play this daily map.');
+			notie.alert({
+				type: 'warning',
+				text: 'Only VIP players can see this daily map.'
+			});
 			return;
 		}
 
 		if (dayId === null) {
-			alert('You cannot play daily map in future.');
+			notie.alert({
+				type: 'info',
+				text: 'This daily map is not public yet.'
+			});
 			return;
 		}
 
@@ -136,42 +142,30 @@
 					return backendDay === undefined ? dayIndex : backendDay;
 				})
 				.map((backendDay) => {
+					let lastPlayableDate = new Date();
+					lastPlayableDate = new Date(lastPlayableDate.getTime() - (86400*6*1000));
+
 					if (typeof backendDay === 'number') {
 						const dayDate = new Date(month.getFullYear(), month.getMonth(), backendDay + 1);
 
-						return { isPlayable: dayDate < new Date() && dayDate >= launchDate, dayId: null, dayNumber: backendDay + 1, isFinished: false, isNoMistake: false, isFastFinish: false };
+						return { isPlayable: dayDate < lastPlayableDate && dayDate >= launchDate, dayId: null, dayNumber: backendDay + 1, isFinished: false, isNoMistake: false, isFastFinish: false };
 					}
 
 					const dayProfile = profiles.documents.find((doc) => doc.dailyMapId === backendDay.$id);
 
 					const dayDate = new Date(backendDay.date);
 
-					return { isPlayable: dayDate < new Date() && dayDate >= launchDate, dayId: backendDay.$id, dayNumber: new Date(backendDay.date).getDate(), isFinished: dayProfile?.medalFinish ?? false, isNoMistake: dayProfile?.medalNoMistake ?? false, isFastFinish: dayProfile?.medalFastFinish ?? false };
+					return { isPlayable: dayDate < lastPlayableDate && dayDate >= launchDate, dayId: backendDay.$id, dayNumber: new Date(backendDay.date).getDate(), isFinished: dayProfile?.medalFinish ?? false, isNoMistake: dayProfile?.medalNoMistake ?? false, isFastFinish: dayProfile?.medalFastFinish ?? false };
 				}) as day}
 				<button
 					on:click={() => onPlayGame(day.dayId, day.isPlayable)}
 					class="col-span-1 flex items-center justify-center relative"
 				>
 					{#if day.dayId === null && day.isPlayable}
-						<div class="absolute top-1.5 left-0 w-full flex justify-center">
-							<div
-								class="transform translate-y-[-50%] bg-emerald-200 bg-opacity-100 rounded-full flex items-center justify-center p-1.5"
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="3"
-									stroke="currentColor"
-									class="w-4 h-4 text-emerald-700"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-									/>
-								</svg>
-							</div>
+						<div class="absolute inset-0 flex justify-center items-center rounded-full bg-gray-900 bg-opacity-75 text-white">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+							  </svg>							  
 						</div>
 					{/if}
 					<svg
