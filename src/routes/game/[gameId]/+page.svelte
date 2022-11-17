@@ -14,6 +14,7 @@
 
 	$: if (input !== null) {
 		inputPass = 0;
+		inputFail = 0;
 
 		let index = 0;
 		let didOneFail = false;
