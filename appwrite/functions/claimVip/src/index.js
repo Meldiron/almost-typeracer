@@ -48,9 +48,16 @@ module.exports = async function (req, res) {
 	const star = await isStar(token);
 
 	if (!star) {
-		res.json({ success: false, message: 'You must star Appwrite repository first.' });
+		res.json({
+			success: false,
+			message: 'You must star Appwrite repository first. If you did, please relog and try again.'
+		});
 		return;
 	}
+
+	const userId = req.variables['APPWRITE_FUNCTION_USER_ID'];
+
+	const user = await users.get(userId);
 
 	const memberships = await users.listMemberships(user.$id);
 	let isVip = false;
@@ -60,12 +67,12 @@ module.exports = async function (req, res) {
 		}
 	}
 
-  if(isVip) {
-	res.json({ success: true, message: 'You are already VIP.' });
-    return;
-  }
+	if (isVip) {
+		res.json({ success: true, message: 'You are already VIP.' });
+		return;
+	}
 
-	await teams.createMembership('vip', user.email, 'member');
+	await teams.createMembership('vip', user.email, ['member'], 'http://localhost/');
 
-	res.json({ success: true, message: 'You are VIP now.' });
+	res.json({ success: true, message: 'You are VIP now. Reload the page to see new maps!' });
 };

@@ -1,4 +1,4 @@
-import { Client, Account, ID, Databases, Query, type Models, Functions } from 'appwrite';
+import { Client, Account, Teams, Databases, Query, type Models, Functions } from 'appwrite';
 import { AuthStore } from '$lib/authStore';
 import { get } from 'svelte/store';
 
@@ -27,6 +27,7 @@ const client = new Client()
 const account = new Account(client);
 const database = new Databases(client);
 const functions = new Functions(client);
+const teams = new Teams(client);
 
 export const AppwriteService = {
 	signIn: () => {
@@ -95,10 +96,16 @@ export const AppwriteService = {
 
 		return json;
 	},
+	isVip: async () => {
+		try {
+			await teams.get('vip');
+			return true;
+		} catch(err) {
+			return false;
+		}
+	},
 	claimVip: async () => {
-		await account.updateSession('current');
 		const session = await account.getSession('current');
-		console.log(session.providerAccessToken);
 		
 		const res = await functions.createExecution('claimVip', JSON.stringify({token: session.providerAccessToken}), false);
 
