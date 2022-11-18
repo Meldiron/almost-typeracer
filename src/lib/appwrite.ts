@@ -21,7 +21,7 @@ type DailyMap = {
 } & Models.Document;
 
 const client = new Client()
-	.setEndpoint('https://demo.appwrite.io/v1')
+	.setEndpoint('https://appwrite.almost-typeracer.matejbaco.eu/v1')
 	.setProject('almostTypeRacer');
 
 const account = new Account(client);
