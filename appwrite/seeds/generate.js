@@ -110,7 +110,7 @@ for(const repo of repos) {
                 textAfter: textAfter.join("\n"),
             });
 
-            date.setDate(date.getDate() + 1);
+            date = new Date(date.getTime() + (1000*86400));
             i++;
         }
     }

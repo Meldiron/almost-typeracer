@@ -2,7 +2,7 @@ import { Client, Account, Teams, Databases, Query, type Models, Functions } from
 import { AuthStore } from '$lib/authStore';
 import { get } from 'svelte/store';
 
-export const launchDate = new Date('2022-09-30');
+export const launchDate = new Date('2021-12-30');
 
 type DailyMapProfile = {
 	dailyMapId: string;
