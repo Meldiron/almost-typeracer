@@ -67,7 +67,7 @@ module.exports = async function (req, res) {
 
 			const permissions =
 				state === 'public'
-					? [sdk.Permission.read(sdk.Role.any())]
+					? [sdk.Permission.read(sdk.Role.users())]
 					: state === 'vip'
 					? [sdk.Permission.read(sdk.Role.team('vip'))]
 					: [];

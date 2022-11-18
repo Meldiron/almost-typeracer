@@ -22,7 +22,7 @@
 	let text = ``;
 	$: letters = text.split('');
 
-	let oldInput : string | null = null;
+	let oldInput: string | null = null;
 	let input: string | null = null;
 
 	let inputPass = 0;
@@ -31,7 +31,7 @@
 	$: if (input !== null) {
 		let isSpace = false;
 		const change = (input ?? '').split(oldInput ?? '').join('');
-		if(change === ' ') {
+		if (change === ' ') {
 			isSpace = true;
 		}
 
@@ -62,11 +62,11 @@
 			index++;
 		}
 
-		if(isSpace) {
-			while(letters[index] === ' ') {
+		if (isSpace) {
+			while (letters[index] === ' ') {
 				inputPass++;
 				index++;
-				input += " ";
+				input += ' ';
 			}
 		}
 
@@ -119,9 +119,12 @@
 
 	function parseHtml(text: string) {
 		return text
-			.split('\n').join('<span{{ATR_SPACE}}class="px-0.5">×</span><br>')
-			.split(' ').join('<span{{ATR_SPACE}}class="px-0.5">•</span>')
-			.split('{{ATR_SPACE}}').join(" ");
+			.split('\n')
+			.join('<span{{ATR_SPACE}}class="px-0.5">×</span><br>')
+			.split(' ')
+			.join('<span{{ATR_SPACE}}class="px-0.5">•</span>')
+			.split('{{ATR_SPACE}}')
+			.join(' ');
 	}
 </script>
 
@@ -154,27 +157,32 @@
 		</div>
 		<div class="w-full">
 			<div class="text-sm rounded-xl bg-[#1e1e1e] text-[#669bd1] overflow-x-auto">
-				<div class="text-sm bg-black text-gray-700 rounded-t-xl px-6 pt-4 pb-2">
-					{@html parseHtml(day.textBefore)}
-				</div>
+				{#if day.textBefore}
+					<div class="text-sm bg-black text-gray-700 rounded-t-xl px-6 pt-4 pb-2">
+						{@html parseHtml(day.textBefore)}
+					</div>
+				{/if}
 				<div class="px-6 my-2">
 					{#key inputPass}
-					{#key inputFail}
-						{#each letters as letter, index}
-							{#if letter == '\n'}
-								<span class={`px-0.5 text-gray-500 ${getLetterClasses(index, true)}`}>×</span><br />
-							{:else if letter == ' '}
-								<span class={`px-0.5 text-gray-500 ${getLetterClasses(index, true)}`}>•</span>
-							{:else}
-								<span class={getLetterClasses(index, false)}>{letter}</span>
-							{/if}
-						{/each}
+						{#key inputFail}
+							{#each letters as letter, index}
+								{#if letter == '\n'}
+									<span class={`px-0.5 text-gray-500 ${getLetterClasses(index, true)}`}>×</span><br
+									/>
+								{:else if letter == ' '}
+									<span class={`px-0.5 text-gray-500 ${getLetterClasses(index, true)}`}>•</span>
+								{:else}
+									<span class={getLetterClasses(index, false)}>{letter}</span>
+								{/if}
+							{/each}
+						{/key}
 					{/key}
-				{/key}
 				</div>
-				<div class="text-sm bg-black text-gray-600 rounded-b-xl px-6 pt-2 pb-4">
-					{@html parseHtml(day.textAfter)}
-				</div>
+				{#if day.textAfter}
+					<div class="text-sm bg-black text-gray-600 rounded-b-xl px-6 pt-2 pb-4">
+						{@html parseHtml(day.textAfter)}
+					</div>
+				{/if}
 			</div>
 		</div>
 		<div class="w-full mt-4">
@@ -202,28 +210,28 @@
 			{#if endGamePromise !== null}
 				<hr class="border-t-2 border-gray-100 my-4" />
 				{#await endGamePromise}
-				<div class="flex justify-center">
-					<svg
-						class="animate-spin h-6 w-6 text-slate-900"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<circle
-							class="opacity-25"
-							cx="12"
-							cy="12"
-							r="10"
-							stroke="currentColor"
-							stroke-width="4"
-						/>
-						<path
-							class="opacity-75"
-							fill="currentColor"
-							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-						/>
-					</svg>
-				</div>
+					<div class="flex justify-center">
+						<svg
+							class="animate-spin h-6 w-6 text-slate-900"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<circle
+								class="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								stroke-width="4"
+							/>
+							<path
+								class="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							/>
+						</svg>
+					</div>
 				{:then response}
 					<div class="flex justify-center">
 						<p class="font-bold text-green-500">{response.message}</p>
