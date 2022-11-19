@@ -49,13 +49,14 @@ export const AppwriteService = {
 	},
 	getDailyMaps: async (year: number, month: number) => {
 		const firstDayDate = new Date(year, month, 1);
-		const lastDayDate = new Date(year, month + 1, 0);
+		const lastDayDate = new Date(year, month + 1, 1);
 
 		return await database.listDocuments<DailyMap>('main', 'dailyMaps', [
 			Query.limit(50),
 			Query.greaterThanEqual('date', firstDayDate.toISOString()),
 			Query.lessThanEqual('date', lastDayDate.toISOString())
 		]);
+
 	},
 	getDailyMap: async (gameId: string) => {
 		return await database.getDocument<DailyMap>('main', 'dailyMaps', gameId);
@@ -64,7 +65,7 @@ export const AppwriteService = {
 		const user = get(AuthStore);
 
 		if (!user) {
-			throw new Error('Please sign in.');
+			throw new Error('Sign in to play.');
 		}
 
 		const userId = user.$id;

@@ -170,7 +170,7 @@
             "execute": [],
             "events": [],
             "schedule": "0 0 * * *",
-            "timeout": 15
+            "timeout": 120
         },
         {
             "$id": "dailyMapGame",

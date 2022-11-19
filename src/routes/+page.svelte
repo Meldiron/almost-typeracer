@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { AppwriteService, launchDate } from '$lib/appwrite';
+	import { AuthStore } from '$lib/authStore';
 
 	let month = new Date();
 	month.setDate(1);
@@ -80,9 +81,13 @@
 </script>
 
 {#await teamPromise then isVip}
-	{#if !isVip}
+	{#if !isVip && $AuthStore !== null}
 		<div class="mt-6 bg-blue-600 p-4 shadow-sm rounded-lg">
 			<h1 class="text-white font-medium text-xl">Become VIP. It's free</h1>
+			<h3 class="text-blue-100 font-medium mt-2">
+				VIP players can play all maps from the past, while normal players can only play maps up to 7
+				days into the past. There are planty of maps ready since 1.1.2022!
+			</h3>
 			<h3 class="text-blue-100 font-medium mt-2">
 				All you need to do is to star Appwrite's repository on GitHub to become VIP. Show Appwrite
 				some love. 💖
@@ -198,7 +203,7 @@
 		{:then { days, profiles }}
 			{#each Array.from(Array(monthDays).keys())
 				.map((dayIndex) => {
-					const backendDay = days.documents.find((doc) => new Date(doc.date).getDate() - 1 === dayIndex);
+					const backendDay = days.documents.find((doc) => new Date(doc.date).getDate() === dayIndex + 1);
 					return backendDay === undefined ? dayIndex : backendDay;
 				})
 				.map((backendDay) => {
@@ -206,7 +211,7 @@
 					lastPlayableDate = new Date(lastPlayableDate.getTime() - 86400 * 6 * 1000);
 
 					if (typeof backendDay === 'number') {
-						const dayDate = new Date(month.getFullYear(), month.getMonth(), backendDay + 1);
+						const dayDate = new Date(month.getFullYear(), month.getMonth(), backendDay);
 
 						return { isPlayable: dayDate < lastPlayableDate && dayDate >= launchDate, dayId: null, dayNumber: backendDay + 1, isFinished: false, isNoMistake: false, isFastFinish: false };
 					}
@@ -304,5 +309,50 @@
 				<p class="font-bold text-orange-500">{error.message}</p>
 			</div>
 		{/await}
+	</div>
+</section>
+
+<section class="my-6 bg-white rounded-lg shadow-sm p-4 ">
+	<div class="prose">
+		<h3>How To Play</h3>
+		<p>
+			Click on a date in the calendar to play the game. There is a code snippet you need to write in
+			order to complete the level. Alongside letters, there are 2 symbols you need to type:
+		</p>
+
+		<p>
+			<span class="font-bold text-2xl text-blue-600 mr-2">×</span> Linebreak indicator. Press enter to
+			fullfill.
+		</p>
+
+		<p>
+			<span class="font-bold text-2xl text-blue-600 mr-2">•</span> Space indicator. Press space to fullfill.
+			To make it more fun, if there are many spaces, you only need to type one!
+		</p>
+
+		<p>There is one level for each day since 1.1.2022. Come back everyday to play new levels!</p>
+
+		<p>
+			There are 3 goals in each level. Completed goals are indicated with colorful outline on the
+			day in your calendar.
+		</p>
+
+		<p>If you didn't play the level yet, there will be no outline:</p>
+
+		<img src="/normal.png" class="w-20" alt="Normal date" />
+
+		<p>If you completed a level, blue outline appears:</p>
+
+		<img src="/blue.png" class="w-20" alt="Blue date" />
+
+		<p>If you complete level with at least 50 WPM, green outline appears:</p>
+
+		<img src="/green.png" class="w-20" alt="Green date" />
+
+		<p>If you complete level with no mistake, pink outline appears:</p>
+
+		<img src="/pink.png" class="w-20" alt="Pink date" />
+
+		<p>Can you achieve all 3 goals on all maps? 😏</p>
 	</div>
 </section>
