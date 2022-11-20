@@ -1,5 +1,18 @@
 <script lang="ts">
 	import { AppwriteService } from '$lib/appwrite';
+	import { afterUpdate, beforeUpdate, tick } from 'svelte';
+	import Letter from './letter.svelte';
+
+	/*
+	let t = 0;
+	beforeUpdate(() => {
+		t = Date.now();
+	});
+
+	afterUpdate(() => {
+		console.log(Date.now() - t);
+	});
+	*/
 
 	export let data: { gameId: string };
 
@@ -8,6 +21,13 @@
 	async function fetchBackendData() {
 		const res = await AppwriteService.getDailyMap(data.gameId);
 		text = res.text;
+		letters = text.split('').map((l) => {
+			return {
+				letter: l,
+				id: Math.random().toString(16).slice(2),
+				classes: []
+			};
+		});
 		return res;
 	}
 
@@ -20,22 +40,15 @@
 	let mistakes = 0;
 
 	let text = ``;
-	$: letters = text.split('');
-
-	let oldInput: string | null = null;
-	let input: string | null = null;
+	let letters: any = [];
 
 	let inputPass = 0;
 	let inputFail = 0;
 
-	$: if (input !== null) {
-		let isSpace = false;
-		const change = (input ?? '').split(oldInput ?? '').join('');
-		if (change === ' ') {
-			isSpace = true;
-		}
-
-		oldInput = input;
+	function onKeyPress(e: any) {
+		const inputLetter = e.data;
+		let input = e.target.value;
+		const isSpace = inputLetter === ' ';
 
 		if (timerStart === null) {
 			timerStart = Date.now();
@@ -50,7 +63,7 @@
 		let didOneFail = false;
 
 		for (const letter of input.split('')) {
-			const expectedLetter = letters[index] ?? null;
+			const expectedLetter = letters[index].letter ?? null;
 
 			if (expectedLetter === letter && !didOneFail) {
 				inputPass++;
@@ -62,13 +75,15 @@
 			index++;
 		}
 
-		if (isSpace) {
-			while (letters[index] === ' ') {
+		if (isSpace && !didOneFail) {
+			while (letters[index].letter === ' ') {
 				inputPass++;
 				index++;
 				input += ' ';
 			}
 		}
+
+		e.target.value = input;
 
 		if (oldinputFail < inputFail) {
 			mistakes += inputFail - oldinputFail;
@@ -78,6 +93,13 @@
 
 		if (inputFail === 0 && inputPass === letters.length) {
 			endGame();
+		}
+
+		index = 0;
+		for(const letter of letters) {
+			const isBackground = letter.letter == ' ' || letter.letter == '\n';
+			letters[index].classes = getLetterClasses(index, isBackground);
+			index++;
 		}
 	}
 
@@ -110,7 +132,7 @@
 		const dif = now - start;
 		const difSecs = dif / 1000;
 
-		const lettersCount = input?.length ?? 0;
+		const lettersCount = inputPass;
 		const wordCount = lettersCount / 4.7;
 
 		const wpm = (wordCount / difSecs) * 60;
@@ -163,20 +185,9 @@
 					</div>
 				{/if}
 				<div class="px-6 my-2">
-					{#key inputPass}
-						{#key inputFail}
-							{#each letters as letter, index}
-								{#if letter == '\n'}
-									<span class={`px-0.5 text-gray-500 ${getLetterClasses(index, true)}`}>×</span><br
-									/>
-								{:else if letter == ' '}
-									<span class={`px-0.5 text-gray-500 ${getLetterClasses(index, true)}`}>•</span>
-								{:else}
-									<span class={getLetterClasses(index, false)}>{letter}</span>
-								{/if}
-							{/each}
-						{/key}
-					{/key}
+					{#each letters as letter (letter.id)}
+						<Letter letter={letter.letter} classes={letter.classes} />
+					{/each}
 				</div>
 				{#if day.textAfter}
 					<div class="text-sm bg-black text-gray-600 rounded-b-xl px-6 pt-2 pb-4">
@@ -187,8 +198,8 @@
 		</div>
 		<div class="w-full mt-4">
 			<textarea
+				on:input={onKeyPress}
 				rows="3"
-				bind:value={input}
 				disabled={gameEnded}
 				class="disabled:opacity-50 w-full rounded-xl border-2 border-gray-200 bg-transparent text-gray-900 placeholder-gray-400 p-3"
 				type="text"
