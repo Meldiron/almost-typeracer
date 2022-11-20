@@ -31,11 +31,14 @@ function removeComments(text) {
         return l.substring(0, index);
     });
 
-    // Remove empty line
-    lines = lines.filter((l) => l.split(" ").join("").length > 0);
+    // Remove imports
+    lines = lines.filter((l) => !l.startsWith('use '));
 
     // Remove last space in line
     lines = lines.map((l) => l.trimEnd());
+
+    // Remove empty line
+    lines = lines.filter((l) => l.split(" ").join("").length > 0);
 
     return lines.join("\n");
 }
@@ -78,8 +81,6 @@ const repos = JSON.parse(readFileSync('utopia-repos.json').toString());
 
 const snippets = [];
 
-let date = new Date('2022-01-01T00:00:00+0000');
-
 for(const repo of repos) {
     const cmd = `git clone https://github.com/${repo.full_name}.git repositories/${repo.name}`;
 
@@ -104,18 +105,27 @@ for(const repo of repos) {
             const textAfter = groupAfter.slice(-3);
 
             snippets.push({
-                date: date.toISOString(),
                 text: group.join("\n"),
                 textBefore: textBefore.join("\n"),
                 textAfter: textAfter.join("\n"),
             });
 
-            date = new Date(date.getTime() + (1000*86400));
             i++;
         }
     }
 
     shelljs.rm('-rf', `repositories/${repo.name}`);
 }
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
+shuffleArray(snippets);
 
 writeFileSync('seeds.json', JSON.stringify(snippets, undefined, 2));

@@ -7,8 +7,6 @@ import { readFileSync } from 'fs';
 
 const seeds = JSON.parse(readFileSync('seeds.json').toString());
 
-seeds.reverse();
-
 const client = new Client()
 	.setEndpoint(process.env.APPWRITE_ENDPOINT)
 	.setProject(process.env.APPWRITE_PROJECT_ID)
@@ -16,7 +14,11 @@ const client = new Client()
 
 const database = new Databases(client);
 
+let date = new Date('2022-01-01T00:00:00+0000');
+
 for (const seed of seeds) {
+	seed.date = date.toISOString();
+
 	const docs = await database.listDocuments('main', 'dailyMaps', [
 		Query.limit(1),
 		Query.equal('date', seed.date)
@@ -33,6 +35,8 @@ for (const seed of seeds) {
 			date: seed.date
 		});
 	}
+
+	date = new Date(date.getTime() + (1000*86400));
 }
 
 console.log('Done');

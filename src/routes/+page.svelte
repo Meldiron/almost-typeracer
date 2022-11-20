@@ -82,29 +82,29 @@
 
 {#await teamPromise then isVip}
 	{#if !isVip && $AuthStore !== null}
-		<div class="mt-6 bg-blue-600 p-4 shadow-sm rounded-lg">
-			<h1 class="text-white font-medium text-xl">Become VIP. It's free</h1>
-			<h3 class="text-blue-100 font-medium mt-2">
+		<div class="p-4 mt-6 bg-blue-600 rounded-lg shadow-sm">
+			<h1 class="text-xl font-medium text-white">Become VIP. It's free</h1>
+			<h3 class="mt-2 font-medium text-blue-100">
 				VIP players can play all maps from the past, while normal players can only play maps up to 7
 				days into the past. There are planty of maps ready since 1.1.2022!
 			</h3>
-			<h3 class="text-blue-100 font-medium mt-2">
+			<h3 class="mt-2 font-medium text-blue-100">
 				All you need to do is to star Appwrite's repository on GitHub to become VIP. Show Appwrite
 				some love. 💖
 			</h3>
-			<div class="mt-4 flex justify-start items-center space-x-3">
+			<div class="flex items-center justify-start mt-4 space-x-3">
 				<a href="https://github.com/appwrite/appwrite" target="_blank" rel="noreferrer"
 					><button class="rounded-lg px-4 py-2 bg-[#181717] text-[#ffffff]">Star on GitHub</button
 					></a
 				>
-				<button class="rounded-lg px-4 py-2 bg-white text-blue-600" on:click={onClaimVip}
+				<button class="px-4 py-2 text-blue-600 bg-white rounded-lg" on:click={onClaimVip}
 					>Claim VIP</button
 				>
 			</div>
 			<div class="mt-4">
 				{#await vipPromise}
 					<svg
-						class="animate-spin h-6 w-6 text-blue-100"
+						class="w-6 h-6 text-blue-100 animate-spin"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
@@ -125,18 +125,18 @@
 					</svg>
 				{:then response}
 					{#if response}
-						<p class="text-blue-100 font-medium">{response.message}</p>
+						<p class="font-medium text-blue-100">{response.message}</p>
 					{/if}
 				{:catch error}
-					<p class="text-blue-100 font-medium">{error.message}</p>
+					<p class="font-medium text-blue-100">{error.message}</p>
 				{/await}
 			</div>
 		</div>
 	{/if}
 {/await}
 
-<section class="my-6 bg-white rounded-lg shadow-sm p-4">
-	<div class="flex items-center justify-between space-x-3 pb-8 pt-4">
+<section class="p-4 my-6 bg-white rounded-lg shadow-sm">
+	<div class="flex items-center justify-between pt-4 pb-8 space-x-3">
 		<button on:click={() => switchMonth(-1)} class="text-gray-600 hover:text-gray-900">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +150,7 @@
 			</svg>
 		</button>
 
-		<h3 class="text-gray-900 font-bold text-xl">{monthName} {month.getFullYear()}</h3>
+		<h3 class="text-xl font-bold text-gray-900">{monthName} {month.getFullYear()}</h3>
 		<button on:click={() => switchMonth(1)} class="text-gray-600 hover:text-gray-900">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -164,23 +164,23 @@
 			</svg>
 		</button>
 	</div>
-	<div class="w-full grid grid-cols-1 md:grid-cols-7 gap-4">
-		<div class="col-span-1 text-center font-bold text-gray-300">M</div>
-		<div class="col-span-1 text-center font-bold text-gray-300">T</div>
-		<div class="col-span-1 text-center font-bold text-gray-300">W</div>
-		<div class="col-span-1 text-center font-bold text-gray-300">TH</div>
-		<div class="col-span-1 text-center font-bold text-gray-300">F</div>
-		<div class="col-span-1 text-center font-bold text-gray-300">S</div>
-		<div class="col-span-1 text-center font-bold text-gray-300">S</div>
+	<div class="grid w-full grid-cols-1 gap-4 md:grid-cols-7">
+		<div class="col-span-1 font-bold text-center text-gray-300">M</div>
+		<div class="col-span-1 font-bold text-center text-gray-300">T</div>
+		<div class="col-span-1 font-bold text-center text-gray-300">W</div>
+		<div class="col-span-1 font-bold text-center text-gray-300">TH</div>
+		<div class="col-span-1 font-bold text-center text-gray-300">F</div>
+		<div class="col-span-1 font-bold text-center text-gray-300">S</div>
+		<div class="col-span-1 font-bold text-center text-gray-300">S</div>
 
 		{#each Array.from(Array(monthOffset).keys()) as _offsetIndex}
-			<div class="col-span-1 flex items-center justify-center" />
+			<div class="flex items-center justify-center col-span-1" />
 		{/each}
 
 		{#await backendData}
-			<div class="col-span-1 md:col-span-7 flex items-center justify-center">
+			<div class="flex items-center justify-center col-span-1 md:col-span-7">
 				<svg
-					class="animate-spin h-6 w-6 text-slate-900"
+					class="w-6 h-6 animate-spin text-slate-900"
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
 					viewBox="0 0 24 24"
@@ -224,11 +224,11 @@
 				}) as day}
 				<button
 					on:click={() => onPlayGame(day.dayId, day.isPlayable)}
-					class="col-span-1 flex items-center justify-center relative"
+					class="relative flex items-center justify-center col-span-1"
 				>
 					{#if day.dayId === null && day.isPlayable}
 						<div
-							class="absolute inset-0 flex justify-center items-center rounded-full bg-gray-900 bg-opacity-75 text-white"
+							class="absolute inset-0 flex items-center justify-center text-white bg-gray-900 bg-opacity-75 rounded-full"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -305,14 +305,14 @@
 				</button>
 			{/each}
 		{:catch error}
-			<div class="col-span-1 md:col-span-7 flex items-center justify-center">
+			<div class="flex items-center justify-center col-span-1 md:col-span-7">
 				<p class="font-bold text-orange-500">{error.message}</p>
 			</div>
 		{/await}
 	</div>
 </section>
 
-<section class="my-6 bg-white rounded-lg shadow-sm p-4 ">
+<section class="p-4 my-6 bg-white rounded-lg shadow-sm ">
 	<div class="prose">
 		<h3>How To Play</h3>
 		<p>
@@ -321,12 +321,12 @@
 		</p>
 
 		<p>
-			<span class="font-bold text-2xl text-blue-600 mr-2">×</span> Linebreak indicator. Press enter to
+			<span class="mr-2 text-2xl font-bold text-blue-600">×</span> Linebreak indicator. Press enter to
 			fullfill.
 		</p>
 
 		<p>
-			<span class="font-bold text-2xl text-blue-600 mr-2">•</span> Space indicator. Press space to fullfill.
+			<span class="mr-2 text-2xl font-bold text-blue-600">•</span> Space indicator. Press space to fullfill.
 			To make it more fun, if there are many spaces, you only need to type one!
 		</p>
 
