@@ -39,4 +39,4 @@ for (const seed of seeds) {
 	date = new Date(date.getTime() + (1000*86400));
 }
 
-console.log('Done');
+console.log('Done.');
