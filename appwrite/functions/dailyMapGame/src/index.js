@@ -74,7 +74,7 @@ module.exports = async function (req, res) {
 		score: wpm,
 		medalFinish: true,
 		medalNoMistake: mistakes === 0,
-		medalFastFinish: wpm >= 60
+		medalFastFinish: wpm >= 50
 	};
 
 	if (profileDocument) {

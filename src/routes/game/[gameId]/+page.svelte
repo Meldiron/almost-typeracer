@@ -3,17 +3,6 @@
 	import { afterUpdate, beforeUpdate, tick } from 'svelte';
 	import Letter from './letter.svelte';
 
-	/*
-	let t = 0;
-	beforeUpdate(() => {
-		t = Date.now();
-	});
-
-	afterUpdate(() => {
-		console.log(Date.now() - t);
-	});
-	*/
-
 	export let data: { gameId: string };
 
 	let backendData = fetchBackendData();
@@ -31,6 +20,28 @@
 		return res;
 	}
 
+	function restart() {
+		gameEnded = false;
+		gameSubmitting = false;
+		timerStart = null;
+		timerNow = null;
+		mistakes = 0;
+		lastMistake = null;
+		inputPass = 0;
+		inputFail = 0;
+
+		let index = 0;
+		for(const letter of letters) {
+			const isBackground = letter.letter == ' ' || letter.letter == '\n';
+			letters[index].classes = getLetterClasses(index, isBackground);
+			index++;
+		}
+
+		const el: any = document.querySelector('#gameinput');
+		el.value = "";
+		el.focus();
+	}
+
 	let gameEnded = false;
 	let gameSubmitting = false;
 
@@ -38,6 +49,7 @@
 	let timerNow: number | null = null;
 
 	let mistakes = 0;
+	let lastMistake: number | null = null;
 
 	let text = ``;
 	let letters: any = [];
@@ -46,6 +58,8 @@
 	let inputFail = 0;
 
 	function onKeyPress(e: any) {
+		const oldFails = inputFail;
+
 		const inputLetter = e.data;
 		let input = e.target.value;
 		const isSpace = inputLetter === ' ';
@@ -85,8 +99,10 @@
 
 		e.target.value = input;
 
+		let didMistake = false;
 		if (oldinputFail < inputFail) {
 			mistakes += inputFail - oldinputFail;
+			didMistake = true;
 		}
 
 		timerNow = Date.now();
@@ -100,6 +116,17 @@
 			const isBackground = letter.letter == ' ' || letter.letter == '\n';
 			letters[index].classes = getLetterClasses(index, isBackground);
 			index++;
+		}
+
+		if(inputFail < oldFails) {
+			const dif = Date.now() - (lastMistake??0);
+			if(lastMistake === null || dif < 300) {
+				mistakes -= (oldFails - inputFail);
+			}
+		}
+
+		if(didMistake) {
+			lastMistake = Date.now();
 		}
 	}
 
@@ -198,6 +225,8 @@
 		</div>
 		<div class="w-full mt-4">
 			<textarea
+				id="gameinput"
+				autofocus={true}
 				on:input={onKeyPress}
 				rows="3"
 				disabled={gameEnded}
@@ -205,6 +234,15 @@
 				type="text"
 				placeholder="Click here and start typing ..."
 			/>
+
+			<div class="flex justify-end">
+				<button
+					on:click={restart}
+					class="rounded-lg px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center space-x-2"
+				>
+					<span>Reset</span>
+				</button>
+			</div>
 
 			<hr class="border-t-2 border-gray-100 my-4" />
 
