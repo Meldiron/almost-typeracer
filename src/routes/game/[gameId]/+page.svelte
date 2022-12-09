@@ -120,7 +120,7 @@
 
 		if(inputFail < oldFails) {
 			const dif = Date.now() - (lastMistake??0);
-			if(lastMistake === null || dif < 300) {
+			if(lastMistake === null || dif < 500) {
 				mistakes -= (oldFails - inputFail);
 			}
 		}
