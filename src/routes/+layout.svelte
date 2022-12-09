@@ -66,7 +66,7 @@
 
 		<slot />
 		<footer class="mt-4 text-center text-sm mb-4 text-gray-400">
-			Made with 💝 and <a target="_blank" href="https://appwrite.io/" rel="noreferrer" class="underline">Appwrite</a>. Contact: <span class="underline">matejbaco2000@gmail.com</span>
+			Made with 💝 and <a target="_blank" href="https://appwrite.io/" rel="noreferrer" class="underline">Appwrite</a>. Contact: <span class="underline">contact@almostapps.eu</span>
 		</footer>
 	{/if}
 </div>
