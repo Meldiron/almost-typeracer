@@ -70,7 +70,7 @@ export const AppwriteService = {
 
 		const userId = user.$id;
 
-		const queries = [Query.limit(mapIds.length), Query.equal('userId', userId)];
+		const queries = [Query.limit(mapIds.length ? mapIds.length : 1), Query.equal('userId', userId)];
 
 		if (mapIds.length > 0) {
 			queries.push(Query.equal('dailyMapId', mapIds));
